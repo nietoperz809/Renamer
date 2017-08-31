@@ -183,6 +183,18 @@ public class MainWnd extends javax.swing.JDialog
         return f_in;
     }
 
+    private int loadValue (JTextField t, int def)
+    {
+        try
+        {
+            return Integer.parseInt(t.getText());
+        }
+        catch (NumberFormatException e)
+        {
+            return def;
+        }
+    }
+
     public void renamerEngine (String s_in)
     {
         File[] files = getPath(s_in).listFiles();
@@ -191,26 +203,10 @@ public class MainWnd extends javax.swing.JDialog
             System.out.println("Not a dir");
             return;
         }
-        int num;
-        int step;
+        int num = loadValue (startNum,0);;
+        int step = loadValue (stepSize,1);
         String before = beforeTxt.getText();
         String after = afterTxt.getText();
-        try
-        {
-            step = Integer.parseInt(stepSize.getText());
-        }
-        catch (NumberFormatException e)
-        {
-            step = 1;
-        }
-        try
-        {
-            num = Integer.parseInt(startNum.getText());
-        }
-        catch (NumberFormatException e)
-        {
-            num = 0;
-        }
         for (File file : files)
         {
             if (file.isFile())
@@ -222,10 +218,9 @@ public class MainWnd extends javax.swing.JDialog
                 {
                     extension = fileName.substring(i + 1);
                 }
-                for (; ; )
+                while (true)
                 {
                     num += step;
-                    //System.out.println(n[0]+"."+n[n.length-1]);
                     File newFile = new File(file.getParent(),
                             before + num + after + "." + extension);
                     try
@@ -235,8 +230,7 @@ public class MainWnd extends javax.swing.JDialog
                     }
                     catch (IOException e)
                     {
-                        System.out.println(e);
-                        //System.out.println("fail" + n[0] + "." + n[1]);
+                        System.out.println(e+"---"+num);
                     }
                 }
             }
