@@ -36,6 +36,7 @@ public class MainWnd extends javax.swing.JDialog
     {
         super(parent, modal);
         initComponents();
+        jFileChooser1.setControlButtonsAreShown(false);
     }
 
     private static void run ()
@@ -165,18 +166,26 @@ public class MainWnd extends javax.swing.JDialog
     {//GEN-HEADEREND:event_jButton1ActionPerformed
         //String n = jFileChooser1.getSelectedFile().getPath();
         //System.out.println(n);
-        renamer(jFileChooser1.getSelectedFile().getAbsolutePath());
+        File f = jFileChooser1.getSelectedFile();
+        if (f == null)
+            return;
+        renamerEngine(f.getAbsolutePath());
         jFileChooser1.rescanCurrentDirectory();
     }//GEN-LAST:event_jButton1ActionPerformed
 
-    public void renamer (String s_in)
+    private File getPath (String in)
     {
-        File f_in = new File(s_in);
+        File f_in = new File(in);
         if (f_in.isFile())
         {
             f_in = new File(f_in.getParent());
         }
-        File[] files = f_in.listFiles();
+        return f_in;
+    }
+
+    public void renamerEngine (String s_in)
+    {
+        File[] files = getPath(s_in).listFiles();
         if (files == null)
         {
             System.out.println("Not a dir");
